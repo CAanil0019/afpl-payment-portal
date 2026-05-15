@@ -53,3 +53,23 @@ def admin_login(payload: dict, db: Session = Depends(get_db)):
         "access_token": token,
         "token_type": "bearer"
     }
+@router.post("/create-default-admin")
+def create_default_admin(db: Session = Depends(get_db)):
+
+    existing = db.query(AdminUser).filter(
+        AdminUser.username == "admin"
+    ).first()
+
+    if existing:
+        return {"message": "Admin already exists"}
+
+    admin = AdminUser(
+        username="admin",
+        password="admin123",
+        is_active=True
+    )
+
+    db.add(admin)
+    db.commit()
+
+    return {"message": "Default admin created"}
