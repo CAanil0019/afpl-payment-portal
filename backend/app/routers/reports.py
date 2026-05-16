@@ -83,3 +83,8 @@ def send_test_email_open():
     return {
         "message": "Test email triggered successfully"
     }
+
+@router.get("/transactions-open")
+def get_transactions_open(db: Session = Depends(get_db)):
+    data = db.query(Transaction).order_by(Transaction.transaction_id.desc()).all()
+    return data
